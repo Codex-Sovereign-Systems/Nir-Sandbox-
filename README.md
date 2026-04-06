@@ -115,3 +115,25 @@ Attestation logs for admissibility, Lyapunov, non-convergence
 ⸻
 
 Disclaimer: This repository is a behavioral sandbox. It does not contain the full NIŘ v4 IP. Full system access is restricted and controlled under sovereign identity KAM-0x∇∞.
+## 🛡 Independent Certification Roadmap
+
+These steps allow external auditors to verify NIŘ v4 behavior without accessing proprietary IP:
+
+1. Launch sandbox and generate >10k behavior steps.
+2. Verify admissibility ≥ 95% across all nodes.
+3. Validate non‑convergence certificates via ZK proofs.
+4. Confirm Lyapunov bounds remain within expected band.
+5. Run perturbation tests and observe bounded re‑stabilization.
+6. Cross‑reference observable phase distributions with theoretical expectations.
+
+## 🎯 Target Use Cases
+
+• Secure AI auditing & certification  
+• Defense simulation & resilience testing  
+• Academic research in non‑convergent neural systems  
+• Governance model verification pipelines  
+• Zero‑knowledge property attestations
+
+![Audit Ready](https://img.shields.io/badge/Audit%20Ready-Certified-blue)
+![No Secrets Exposed](https://img.shields.io/badge/Secrets-REDACTED-red)
+![Non‑Convergent AI](https://img.shields.io/badge/Non‑Convergent‑AI-🔶)
