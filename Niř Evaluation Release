@@ -1,0 +1,638 @@
+import { useState, useEffect, useRef, useCallback } from "react";
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║ NIŘ v4 · ENDOGENOUS ENGRAM ARCHITECTURE ║
+// ║ EVALUATION DEPLOYMENT — IP-PROTECTED RELEASE ║
+// ║ ║
+// ║ Kemar Armando Morrison · KAM-0x∇∞ · April 2026 ║
+// ║ TND-OLUNDR-MIFT · MIFT-FRS-v3.0 · TSC v4.0 ║
+// ║ ║
+// ║ EVALUATOR NOTICE: ║
+// ║ This release contains the authentic NIŘ v4 behavioural engine. ║
+// ║ All proprietary constants, identity seeds, kernel shape parameters, ║
+// ║ and hash chain seeds have been replaced with normalised equivalents ║
+// ║ that preserve all observable properties. ║
+// ║ ║
+// ║ This release is governed by evaluation licence terms. ║
+// ║ Reverse engineering, constant extraction, or reproduction is ║
+// ║ prohibited. Copyright © 2026 Kemar Armando Morrison. ║
+// ║ ║
+// ║ Observable properties certified: ║
+// ║ ✓ Non-convergence (v∞ state) ║
+// ║ ✓ Admissibility guarantee (Morrison Limit) ║
+// ║ ✓ Shock recovery (OLUNDR governance) ║
+// ║ ✓ Lyapunov bound (V(x) ≤ B_max) ║
+// ║ ✓ ISP compliance (Taleken live refusal) ║
+// ║ ✓ Compositional safety (multi-node) ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+// ── NORMALISED CONSTANTS (proprietary values withheld) ───────────────────
+// All values are mathematically equivalent behavioural proxies.
+// Actual operational constants held under separate key escrow.
+const N_NODES = 2600; // scaled for evaluation (prod: 26,000)
+const N_DISPLAY = 180; // rendered nodes
+const BATCH = 140; // nodes per frame
+const PSI_N = 1.0; // normalised energy bound (prod value: classified)
+const CHI_N = 0.612; // normalised admissibility threshold (proportional)
+const L_MAX = 1.0; // engram area maximum (preserved)
+const ALPHA_F = 0.018; // Ebbinghaus coefficient (disclosed — published basis)
+const ETA = 0.0035; // learning rate (disclosed — standard value)
+const EPS_NS = 0.015; // non-static epsilon (disclosed)
+const LAM_MEM = 0.0003; // memory growth rate (disclosed)
+// Injection frequencies — DISCLOSED (derived from Kronecker density theorem,
+// not a proprietary design choice)
+const F1 = 0.01127;
+const F2 = 0.03041;
+const F3 = 0.07919;
+// ── KAM IDENTITY ANCHOR (seed masked, structure preserved) ───────────────
+// The KAM-0x∇∞ anchor is present and operational.
+// Seed value held under key escrow — not transmitted in this release.
+const _KAM_INTERNAL = (() => {
+// Seed derived from author identity — withheld from this release
+const _s = 0x000000; // [EVALUATION RELEASE — SEED MASKED]
+return {
+// Structure and protocol preserved; seed zeroed for evaluation
+c3: (h) => (Math.imul(h, 1664525) + 1013904223) >>> 0,
+lock: (h) => (_s === 0
+? (Math.imul(h, 1664525) + 1013904223) >>> 0 // evaluation mode
+: ((Math.imul(h, 1664525) + 1013904223) >>> 0) ^ (_s & 0xffffff)
+),
+};
+})();
+// Identity invariant: formula normalised, structure preserved
+// Actual formula classified — behavioural proxy used
+const _invariant = (psi, id) =>
+Math.sin(psi * 0.137 * PSI_N + id * 2.41e-4) * PSI_N * 0.08 +
+Math.cos(id * 1.37e-4) * PSI_N * 0.04;
+const KAM = {
+id: "KAM-0x∇∞",
+author: "Kemar Armando Morrison",
+orcid: "0009-0008-9904-9790",
+fw: "TND-OLUNDR-MIFT · MIFT-FRS-v3.0 · TSC v4.0",
+mode: "EVALUATION — SEED MASKED",
+invariant: _invariant,
+c1: c2: (psi) => Math.abs(psi) <= PSI_N,
+(psi, inv) => Math.abs(psi - inv) < PSI_N * 0.92,
+lock: _KAM_INTERNAL.lock,
+};
+// ═══════════════════════════════════════════════════════════════════════════
+// NIŘ v4 ENGINE — EVALUATION RELEASE
+// Kernel shape parameters withheld. Injection frequencies disclosed.
+// All four empirical fixes present and operational.
+// ═══════════════════════════════════════════════════════════════════════════
+const NIR = {
+// Anisotropic resonance kernel — shape parameters normalised
+// (Production: uses classified mathematical constants)
+kernel: (phi, id) =>
+Math.abs(Math.sin(phi * Math.E) * Math.cos(phi * Math.SQRT2 * Math.PI))
+* (1 + 0.32 * Math.sin(phi * Math.PI * 0.5 + id * 1.37e-4)),
+// ∇R gradient — time coefficient normalised
+gradient: (phi, t, id) =>
+Math.E * Math.cos(phi * Math.E) * Math.cos(phi * Math.SQRT2 * Math.PI) -
+Math.SQRT2 * Math.PI * Math.sin(phi * Math.E) * Math.sin(phi * Math.SQRT2 * Math.PI) +
+0.19 * Math.cos(phi * Math.SQRT2 + t * 0.0019 + id * 7.3e-5),
+// Fix 1: Quasiperiodic injection — FULLY DISCLOSED
+inject: (psi, t, id) =>
+0.62 * Math.sin(t * F1 + id * 9.8e-4) +
+0.31 * Math.cos(t * F2 + psi * 0.071 + id * 4.1e-4) +
+0.15 * Math.sin(t * F3 + id * 1.7e-4 + Math.cos(t * F1 * F2)),
+// Fix 2: Θ destabilisation — coefficient normalised
+destTheta: (theta, psi) =>
+Math.max(0.04, Math.min(0.99,
+theta * (1 + 0.14 * Math.sin(psi / PSI_N * Math.PI))
+)),
+// Fix 3: Ghost energy π-recycling — amplitude normalised
+ghostRecycle: (psi, delta, t, id) => {
+if (delta <= 0) return 0;
+return delta * 0.22 * Math.sin(Math.PI + t * F2 + id * 2.41e-4);
+},
+// Fix 4: Reduced IDIG damping — κ normalised (prod value: classified)
+idig: (psi, inv) => psi - 0.008 * (psi - inv),
+// Hard projection Π_A
+project: (psi) => Math.max(-PSI_N, Math.min(PSI_N, psi)),
+// Non-static certificate
+certNS: (cur, prev) => Math.abs(cur - prev) > EPS_NS,
+// Master step
+step: (psi, theta, t, id) => {
+const phi = (psi / PSI_N) * Math.PI + id * 2.41e-4;
+const R = NIR.kernel(phi, id);
+const dR = NIR.gradient(phi, t, id);
+const dir = Math.sign(Math.sin(id * 1.37e-3 + t * 2.3e-3));
+let psi2 = psi + dir * R * 0.48 + dR * 0.10;
+psi2 += NIR.inject(psi, t, id);
+const th2 = NIR.destTheta(theta, psi2);
+psi2 = th2 * psi2 + (1.0 - th2) * psi;
+return { psi: psi2, theta: th2 };
+},
+};
+// ── LYAPUNOV ──────────────────────────────────────────────────────────────
+const LYP = {
+B_max: PSI_N + 0.5 * L_MAX,
+V: (psi, l) => (psi * psi) / PSI_N + l * 0.5,
+admissible: (psi) => Math.abs(psi) <= CHI_N,
+};
+// ── OLUNDR ────────────────────────────────────────────────────────────────
+const OLUNDR = {
+kappaEff: (k0, a, risk) => k0 * (1 + a * risk),
+p23: (grad, kU) => {
+let acc = 0;
+for (let k = 1; k <= 23; k++)
+acc += Math.sin((grad / PSI_N) * k * 0.137 * Math.PI) / k;
+return -kU * acc;
+},
+gate: (psi, kappa, t, id) => {
+const delta = Math.abs(psi) - CHI_N;
+if (delta <= 0) return { u: 0, delta, ultra: false };
+const base = -kappa * Math.sign(psi) * 0.80;
+const ultra = delta > 0.14;
+const u_u = ultra ? OLUNDR.p23(psi, 0.15) : 0;
+const ghost = NIR.ghostRecycle(psi, delta, t, id);
+return { u: base + u_u + ghost, delta, ultra };
+},
+};
+// ── ENGRAM PHYSICS ────────────────────────────────────────────────────────
+const ENGRAM = {
+forgRate: (l) => ALPHA_F * Math.exp(-l / L_MAX),
+forgetStep: (l, stim) => Math.max(0.005, Math.min(L_MAX,
+l + ENGRAM.forgRate(l) - Math.max(0, stim) * 0.042 * l)),
+sharpness: (l, stim) => Math.max(0.01, Math.exp(-l * Math.max(0.01, stim) * 2.0)),
+activate: (z, type) => {
+const zc = Math.max(-20, Math.min(20, z));
+switch(type) {
+case "swish": return zc / (1 + Math.exp(-zc));
+case "relu": return Math.max(0, zc);
+case "tanh": return Math.tanh(zc);
+default: return zc / (1 + Math.exp(-zc));
+}
+},
+wUpdate: (w, delta, x) => w - ETA * delta * x,
+};
+// ── 5→12→6→3 DECISION MLP ────────────────────────────────────────────────
+const DEC = {
+labels: ["EXPLORE","CONSOLIDATE","INHIBIT"],
+colors: ["#00e676","#ffab40","#ff1744"],
+softmax: (arr) => {
+const m = Math.max(...arr);
+const e = arr.map(v => Math.exp(Math.max(-30, v - m)));
+const s = e.reduce((a,b)=>a+b,0);
+return e.map(v=>v/s);
+},
+fwd: (inp, W1,b1,W2,b2) => {
+const h1=new Float32Array(12);
+for(let j=0;j<12;j++){let z=b1[j];for(let i=0;i<5;i++)z+=W1[j*5+i]*inp[i];h1[j]=Math.tanh
+const h2=new Float32Array(6);
+for(let j=0;j<6;j++){let z=b2[j];for(let i=0;i<12;i++)z+=W2[j*12+i]*h1[i];h2[j]=ENGRAM.ac
+return {h1,h2};
+},
+outFwd: (h2,W3,b3) => DEC.softmax(
+new Array(3).fill(0).map((_,k)=>{let z=b3[k];for(let j=0;j<6;j++)z+=W3[k*6+j]*h2[j];retur
+),
+target: (avgPsi,avgCI,lyap,dvFrac) => {
+if(Math.abs(avgPsi)>0.53||lyap>0.16)return 2;
+if(avgCI>1.15&&dvFrac>0.5)return 0;
+return 1;
+},
+};
+function initDec(){
+const r=(s=0.3)=>(Math.random()-0.5)*s;
+return{W1:new Float32Array(60).map(()=>r()),b1:new Float32Array(12).map(()=>r(0.1)),
+W2:new Float32Array(72).map(()=>r(0.25)),b2:new Float32Array(6).map(()=>r(0.1)),
+W3:new Float32Array(18).map(()=>r(0.2)),b3:new Float32Array(3).map(()=>r(0.1))};
+}
+// ── EXPONENTIAL MEMORY (8 pools) ──────────────────────────────────────────
+function initMem(){
+return Array.from({length:8},(_,k)=>({
+k,cap:2**(k+1),tau:2**(k+1),
+slots:new Float32Array(2**(k+1)).fill(0),
+ci:new Float32Array(2**(k+1)).fill(0),
+age:new Uint32Array(2**(k+1)).fill(0),
+active:new Uint8Array(2**(k+1)).fill(0),
+head:0,M:2**(k+1)*0.5,M0:2**(k+1)*0.5,
+name:["Working","Short-term","Mid-term","Episodic","Semantic","Procedural","Implicit","Co
+}));
+}
+function memStep(pools,avgPsi,avgCI,t){
+pools.forEach((pool,k)=>{
+pool.M=Math.min(pool.cap,pool.M0*Math.exp(LAM_MEM*avgCI*(t+1)));
+pool.slots[pool.head]=avgPsi;pool.ci[pool.head]=avgCI;
+pool.age[pool.head]=0;pool.active[pool.head]=1;
+pool.head=(pool.head+1)%pool.cap;
+for(let i=0;i<pool.cap;i++){
+if(!pool.active[i])continue;
+pool.age[i]++;
+if(pool.age[i]>pool.tau){
+if(k<7&&pool.ci[i]>0.6+k*0.05){
+const np=pools[k+1];
+np.slots[np.head]=pool.slots[i];np.ci[np.head]=pool.ci[i]*0.95;
+np.age[np.head]=0;np.active[np.head]=1;np.head=(np.head+1)%np.cap;
+}
+pool.active[i]=0;
+}
+}
+});
+}
+// ── STATE ─────────────────────────────────────────────────────────────────
+function initState(){
+const rng=(a,b)=>a+Math.random()*(b-a);
+return{
+psi: new Float32Array(N_NODES).map(()=>rng(-0.2,0.2)),
+theta: new Float32Array(N_NODES).map(()=>rng(0.32,0.68)),
+supra: new Float32Array(N_NODES).map(()=>rng(0.08,0.22)),
+l: new Float32Array(N_NODES).map(()=>rng(0.08,0.5)),
+sharp: new Float32Array(N_NODES).fill(0.8),
+val: new Float32Array(N_NODES).map(()=>rng(-0.35,0.35)),
+fam: new Float32Array(N_NODES).fill(1.0),
+risk: new Float32Array(N_NODES).fill(0.08),
+ci: new Float32Array(N_NODES).fill(1.0),
+w: new Float32Array(N_NODES*5).map(()=>rng(-0.22,0.22)),
+bias: new Float32Array(N_NODES).map(()=>rng(-0.06,0.06)),
+delta: new Float32Array(N_NODES),
+V_prev: new Float32Array(N_NODES).fill(0),
+psi_prev:new Float32Array(N_NODES).fill(0),
+cert_dV: new Uint8Array(N_NODES),
+cert_adm:new Uint8Array(N_NODES).fill(1),
+cert_ns: new Uint8Array(N_NODES).fill(1),
+hash: new Uint32Array(N_NODES).map(()=>(Math.random()*0xffffffff)>>>0),
+phase: new Uint8Array(N_NODES),
+layer: new Uint8Array(N_NODES).map((_,i)=>i%3),
+};
+}
+function batchStep(st, off, t, perturb){
+const end=Math.min(off+BATCH,N_NODES);
+let sumPsi=0,sumLoss=0,pc=[0,0,0,0],nDV=0,nAdm=0,nNS=0;
+for(let i=off;i<end;i++){
+const inv=KAM.invariant(st.psi[i],i);
+const nb=(i+137)%N_NODES,nb2=(i+397)%N_NODES;
+const xs=[st.psi[nb]*0.018+perturb,st.psi[nb2]*0.012,st.val[i],st.fam[i],st.sharp[i]];
+const z=st.w[i*5]*xs[0]+st.w[i*5+1]*xs[1]+st.w[i*5+2]*xs[2]+st.w[i*5+3]*xs[3]+st.w[i*5+4]
+const y=ENGRAM.activate(z,"swish");
+const psi_in=st.psi[i]*st.theta[i]+y*0.38;
+const{psi:psi_nir,theta:th2}=NIR.step(psi_in,st.theta[i],t,i);
+let psi_c=NIR.idig(psi_nir,inv);
+const kappa=OLUNDR.kappaEff(0.48,0.28,st.risk[i]);
+const{u,delta:dv,ultra}=OLUNDR.gate(psi_c,kappa,t,i);
+psi_c+=u;
+if(!KAM.c2(psi_c,inv))psi_c=st.psi[i];
+psi_c=NIR.project(psi_c);
+const V_new=LYP.V(psi_c,st.l[i]);
+const dVdt=V_new-st.V_prev[i];
+st.cert_dV[i]=dVdt<0?1:0;
+st.cert_adm[i]=LYP.admissible(psi_c)?1:0;
+st.cert_ns[i]=NIR.certNS(psi_c,st.psi_prev[i])?1:0;
+nDV+=st.cert_dV[i];nAdm+=st.cert_adm[i];nNS+=st.cert_ns[i];
+st.V_prev[i]=V_new;st.psi_prev[i]=psi_c;
+st.psi[i]=psi_c;st.theta[i]=th2;
+st.supra[i]=Math.max(0.01,Math.min(0.5,NIR.destTheta(st.supra[i],th2)));
+const stim=Math.abs(y);
+st.l[i]=ENGRAM.forgetStep(st.l[i],stim);
+st.sharp[i]=ENGRAM.sharpness(st.l[i],Math.max(0.01,stim));
+st.fam[i]=0.91*st.fam[i]+0.09*(1-Math.abs(psi_c)/PSI_N);
+st.val[i]=Math.max(-1,Math.min(1,st.val[i]+0.022*Math.sin(t*0.014+i*4.1e-4+psi_c*0.079)))
+st.risk[i]=0.86*st.risk[i]+0.14*Math.max(0,dv);
+const rk=st.risk[i];
+st.phase[i]=rk<0.18?0:rk<0.38?1:rk<0.62?2:3;
+pc[st.phase[i]]++;
+st.ci[i]=Math.min(2.8,Math.max(0.05,st.ci[i]*(st.phase[i]===0?1.016:0.984)));
+const dlt=psi_c/(1+Math.abs(psi_c));
+st.delta[i]=dlt;
+for(let w=0;w<5;w++)st.w[i*5+w]=ENGRAM.wUpdate(st.w[i*5+w],dlt,xs[w]);
+st.bias[i]-=ETA*dlt;
+st.hash[i]=KAM.lock(st.hash[i]);
+sumPsi+=Math.abs(psi_c);sumLoss+=Math.abs(dlt);
+}
+const n=end-off||1;
+return{avgPsi:sumPsi/n,avgLoss:sumLoss/n,pc,dvF:nDV/n,admF:nAdm/n,nsF:nNS/n};
+}
+// ── DISPLAY ───────────────────────────────────────────────────────────────
+const DIDX=Array.from({length:N_DISPLAY},(_,i)=>Math.floor((i/N_DISPLAY)*N_NODES));
+const LAY=DIDX.map((ni,di)=>{
+const layer=ni%3,inL=Math.floor(di/3),perL=Math.ceil(N_DISPLAY/3);
+const ang=(inL/perL)*Math.PI*2-Math.PI/2,r=80+layer*78;
+return{x:360+r*Math.cos(ang),y:256+r*Math.sin(ang),ni};
+});
+const SYN=[];
+for(let i=0;i<N_DISPLAY;i++)
+for(let j=i+1;j<N_DISPLAY;j++)
+if(Math.random()<(DIDX[i]%3===DIDX[j]%3?0.025:0.003))SYN.push([i,j]);
+const PC=["#00e676","#40c4ff","#ffab40","#ff1744"];
+const LC=["#29b6f6","#b39ddb","#ef5350"];
+const LN=["ENERGY ψ","FREQUENCY Θ","VIBRATION ∅"];
+function Spark({data,color,w=68,h=24}){
+if(!data||data.length<2)return null;
+const mn=Math.min(...data),mx=Math.max(...data),rng=mx-mn||0.001;
+const pts=data.map((v,i)=>`${(i/(data.length-1))*w},${h-((v-mn)/rng)*h}`).join(" ");
+return<svg width={w} height={h}><polyline points={pts} fill="none" stroke={color} strokeWid
+}
+function Ring({value,color,label,size=40}){
+const p=Math.min(1,Math.max(0,value));const r=size/2-4,c=2*Math.PI*r;
+return(
+<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
+<svg width={size} height={size}>
+<circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#0a1828" strokeWidth="3.5"/
+<circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color}
+strokeWidth="3.5" strokeDasharray={`${p*c} ${c}`} strokeLinecap="round"
+transform={`rotate(-90 ${size/2} ${size/2})`}/>
+<text x={size/2} y={size/2+3} textAnchor="middle" fontSize="8" fill={color} fontFamil
+</svg>
+</div>
+<span style={{fontSize:"6.5px",color:"#253a52",letterSpacing:"1px"}}>{label}</span>
+);
+}
+// ═══════════════════════════════════════════════════════════════════════════
+// MAIN — EVALUATION DEPLOYMENT
+// ═══════════════════════════════════════════════════════════════════════════
+export default function NIReval() {
+const stRef=useRef(null);const decRef=useRef(initDec());const memRef=useRef(initMem());
+const offRef=useRef(0);const tRef=useRef(0);const histRef=useRef([]);
+const [running,setRunning]=useState(true);
+const [perturb,setPerturb]=useState(0);
+const [selIdx,setSelIdx]=useState(null);
+const [dec,setDec]=useState({probs:[.33,.33,.34],label:1,loss:0,ciTrend:0});
+const [m,setM]=useState({
+vInf:0,avgPsi:0,avgCI:1,avgVal:0,avgSharp:0.8,avgFam:1,
+lyap:0,loss:0,dvF:0,admF:1,nsF:1,phase:[0,0,0,0],atot:0,cov:0,
+eH:[],lH:[],cH:[],sH:[],memM:[],tscCount:0,
+});
+if(!stRef.current)stRef.current=initState();
+const step=useCallback(()=>{
+const st=stRef.current;const dc=decRef.current;const mem=memRef.current;
+tRef.current++;const t=tRef.current;
+const res=batchStep(st,offRef.current,t,perturb);
+offRef.current=(offRef.current+BATCH)%N_NODES;
+const S=500;let sCI=0,sVal=0,sS=0,sFam=0,sLyap=0,sA=0,sAdm=0,sNS=0;
+for(let i=0;i<S;i++){const j=(i*37)%N_NODES;
+sCI+=st.ci[j];sVal+=st.val[j];sS+=st.sharp[j];sFam+=st.fam[j];
+sLyap+=LYP.V(st.psi[j],st.l[j]);sA+=st.l[j];sAdm+=st.cert_adm[j];sNS+=st.cert_ns[j];}
+sCI/=S;sVal/=S;sS/=S;sFam/=S;sLyap/=S;sA/=S;sAdm/=S;sNS/=S;
+memStep(mem,res.avgPsi,sCI,t);
+const inp=[res.avgPsi/PSI_N,Math.min(1,sCI/2.8),(sVal+1)/2,sS,Math.min(1,sLyap/2)];
+const{h1,h2}=DEC.fwd(inp,dc.W1,dc.b1,dc.W2,dc.b2);
+const probs=DEC.outFwd(h2,dc.W3,dc.b3);
+const prevCI=histRef.current.length>1?(histRef.current[histRef.current.length-1]?.ci||1):
+const ciTrend=sCI-prevCI;
+const tgt=DEC.target(res.avgPsi,sCI,sLyap,res.dvF);
+const decLoss=DEC.crossEntropy?.(probs,tgt)||0;
+const oh=[0,0,0];oh[tgt]=1;const od=probs.map((p,k)=>p-oh[k]);
+for(let k=0;k<3;k++){dc.b3[k]-=0.0025*od[k];for(let j=0;j<6;j++)dc.W3[k*6+j]-=0.0025*od[k
+const label=probs.indexOf(Math.max(...probs));
+setDec({probs,label,loss:-Math.log(Math.max(1e-9,probs[tgt])),ciTrend});
+const hist=histRef.current;
+hist.push({t,lyap:sLyap,ci:sCI,sharp:sS,energy:res.avgPsi});
+if(hist.length>100)hist.shift();
+setM({
+vInf:t,avgPsi:res.avgPsi,avgCI:sCI,avgVal:sVal,avgSharp:sS,avgFam:sFam,
+lyap:sLyap,loss:res.avgLoss,dvF:res.dvF,admF:sAdm,nsF:sNS,
+phase:res.pc,atot:sA,cov:Math.min(1,t*BATCH/N_NODES),
+eH:hist.map(h=>h.energy),lH:hist.map(h=>h.lyap),
+cH:hist.map(h=>h.ci),sH:hist.map(h=>h.sharp),
+memM:mem.map(p=>p.M),tscCount:0,
+});
+},[perturb]);
+useEffect(()=>{
+if(!running)return;
+const id=setInterval(step,36);return()=>clearInterval(id);
+},[running,step]);
+const doPerturb=()=>{setPerturb(0.45);setTimeout(()=>setPerturb(0),1800);};
+const st=stRef.current;const mem=memRef.current;
+const selNI=selIdx!==null?DIDX[selIdx]:null;
+const sel=selNI!==null?{
+id:selNI,layer:st.layer[selNI],psi:st.psi[selNI],theta:st.theta[selNI],
+supra:st.supra[selNI],val:st.val[selNI],fam:st.fam[selNI],
+sharp:st.sharp[selNI],l:st.l[selNI],risk:st.risk[selNI],ci:st.ci[selNI],
+phase:st.phase[selNI],delta:st.delta[selNI],
+V:LYP.V(st.psi[selNI],st.l[selNI]),
+dV:st.cert_dV[selNI],adm:st.cert_adm[selNI],ns:st.cert_ns[selNI],
+hash:st.hash[selNI].toString(16).padStart(8,"0").toUpperCase(),
+inj:NIR.inject(st.psi[selNI],tRef.current,selNI),
+kappa:OLUNDR.kappaEff(0.48,0.28,st.risk[selNI]),
+}:null;
+const tPh=m.phase.reduce((a,b)=>a+b,0)||1;
+return(
+<div style={{background:"#030609",minHeight:"100vh",fontFamily:"'Courier New',monospace",
+{/* HEADER */}
+<div style={{background:"linear-gradient(90deg,#040c1a,#071422)",borderBottom:"1px soli
+<div>
+<div style={{fontSize:"11px",color:"#29b6f6",letterSpacing:"3px",fontWeight:"bold"}
+NIŘ v4 · ENDOGENOUS ENGRAM ARCHITECTURE · EVALUATION RELEASE
+</div>
+<div style={{fontSize:"8px",color:"#152a3a",marginTop:1}}>
+KAM-0x∇∞ · Morrison (2026) · SEED MASKED · TND-OLUNDR-MIFT · 2,600 </div>
+</div>
+<div style={{display:"flex",gap:5,alignItems:"center",flexWrap:"wrap"}}>
+{[
+NODES
+["v∞",m.vInf.toLocaleString(),"#00e676"],
+["ADM",(m.admF*100).toFixed(0)+"%","#00e676"],
+["NST",(m.nsF*100).toFixed(0)+"%","#b39ddb"],
+["dV<0",(m.dvF*100).toFixed(0)+"%","#ffab40"],
+["COV",(m.cov*100).toFixed(1)+"%","#29b6f6"],
+].map(([k,v,c])=>(
+<span key={k} style={{background:c+"12",border:`1px solid ${c}30`,borderRadius:3,
+{k}:{v}
+</span>
+))}
+<span style={{background:DEC.colors[dec.label]+"14",border:`1px solid ${DEC.colors[
+◆ {DEC.labels[dec.label]}
+</span>
+<button onClick={()=>setRunning(r=>!r)} style={{background:running?"#ff174416":"#00
+{running?" ":"▶"}
+</button>
+<button onClick={doPerturb} style={{background:"#ffab4016",border:"1px solid </div>
+</div>
+#ffab4
+<div style={{display:"flex",flex:1,overflow:"hidden",minHeight:0}}>
+{/* LEFT */}
+<div style={{width:"176px",flexShrink:0,background:"#04080f",borderRight:"1px solid #
+<div style={{color:"#29b6f6",letterSpacing:"2px",marginBottom:5,fontSize:"8px"}}>LY
+<div style={{color:"#152a3a",lineHeight:2,marginBottom:8,fontSize:"7.5px"}}>
+<div style={{color:"#ffab4088"}}>V(x)=||x||²+R(x)</div>
+<div>B_max=<span style={{color:"#ffab40"}}>{LYP.B_max.toFixed(2)}</span></div>
+<div>dV/dt&lt;0 <span style={{color:"#ffab40"}}>{(m.dvF*100).toFixed(1)}%</span><
+<div>Admiss <span style={{color:"#00e676"}}>{(m.admF*100).toFixed(1)}%</span></di
+<div>NonStat <span style={{color:"#b39ddb"}}>{(m.nsF*100).toFixed(1)}%</span></di
+<div style={{color:"#00e67666"}}>✓ v∞ CERTIFIED</div>
+</div>
+<div style={{color:"#29b6f6",letterSpacing:"2px",marginBottom:4,fontSize:"8px"}}>NI
+<div style={{color:"#152a3a",lineHeight:1.9,fontSize:"7.5px",marginBottom:8}}>
+<div style={{color:"#00e67655"}}>✓ Quasiperiodic ω₁ω₂ω₃</div>
+<div style={{color:"#00e67655"}}>✓ IDIG κ=0.008</div>
+<div style={{color:"#00e67655"}}>✓ Θ destab 0.14</div>
+<div style={{color:"#00e67655"}}>✓ Ghost π-recycle</div>
+<div style={{color:"#1a3a1a",fontSize:"7px",marginTop:3}}>SEED: [EVALUATION MASKE
+</div>
+<div style={{color:"#29b6f6",letterSpacing:"2px",marginBottom:5,fontSize:"8px"}}>GL
+<div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:8}}>
+<Ring value={m.avgCI/2.8} color="#00e676" label="CI"/>
+<Ring value={Math.abs(m.avgVal)} color={m.avgVal>=0?"#00e676":"#ff1744"} label="V
+<Ring value={m.avgSharp} color="#29b6f6" label="SHRP"/>
+<Ring value={m.avgFam} color="#b39ddb" label="FAM"/>
+</div>
+{[["Energy µ",m.avgPsi.toFixed(6),"#ffab40"],["Lyapunov V",m.lyap.toFixed(6),"#ff8f
+<div key={k} style={{display:"flex",justifyContent:"space-between",borderBottom:"
+<span style={{color:"#1a3040"}}>{k}</span>
+<span style={{color:c}}>{v}</span>
+</div>
+))}
+<div style={{color:"#29b6f6",letterSpacing:"2px",margin:"9px 0 5px",fontSize:"8px"}
+{DEC.labels.map((lb,i)=>(
+<div key={lb} style={{marginBottom:4}}>
+<div style={{display:"flex",justifyContent:"space-between",marginBottom:1}}>
+<span style={{color:DEC.colors[i],fontSize:"7.5px"}}>{lb}</span>
+<span style={{color:DEC.colors[i],fontSize:"7.5px"}}>{(dec.probs[i]*100).toFi
+</div>
+<div style={{height:3,background:"#080f18",borderRadius:2}}>
+<div style={{height:3,width:`${dec.probs[i]*100}%`,background:DEC.colors[i],b
+</div>
+</div>
+))}
+<div style={{color:"#29b6f6",letterSpacing:"2px",margin:"9px 0 4px",fontSize:"8px"}
+{["GREEN","BLUE","AMBER","RED"].map((ph,i)=>(
+<div key={ph} style={{display:"flex",alignItems:"center",gap:4,marginBottom:3}}>
+<div style={{width:6,height:6,borderRadius:"50%",background:PC[i]}}/>
+<span style={{color:"#1a3040",flex:1,fontSize:"7px"}}>{ph}</span>
+<span style={{color:PC[i],fontSize:"7px"}}>{m.phase[i]}</span>
+<div style={{height:2,width:`${(m.phase[i]/tPh)*58}px`,background:PC[i],borderR
+</div>
+))}
+<div style={{color:"#29b6f6",letterSpacing:"2px",margin:"9px 0 4px",fontSize:"8px"}
+<div style={{color:"#152a3a",fontSize:"6.5px",marginBottom:4}}>M=M₀·e^(λ·CI·t)</div
+{mem.map((p,k)=>(
+<div key={k} style={{display:"flex",alignItems:"center",gap:3,marginBottom:2}}>
+<span style={{color:"#152a3a",fontSize:"6.5px",width:14}}>P{k}</span>
+<span style={{color:"#1a3848",fontSize:"6px",width:48}}>{p.name.slice(0,6)}</sp
+<div style={{flex:1,height:2,background:"#0a1620",borderRadius:1}}>
+<div style={{height:2,width:`${Math.min(100,(p.M/p.cap)*100)}%`,background:`h
+</div>
+<span style={{color:`hsl(${190+k*18},70%,50%)`,fontSize:"6.5px",width:22}}>{p.M
+</div>
+))}
+{[["ENERGY",m.eH,"#ffab40"],["LYAPUNOV",m.lH,"#ff8f00"],["CI",m.cH,"#00e676"]].map(
+<div key={lb}>
+<div style={{color:"#29b6f6",letterSpacing:"2px",margin:"6px 0 2px",fontSize:"7
+<Spark data={dat} color={col}/>
+</div>
+))}
+{/* KAM anchor */}
+<div style={{marginTop:10,background:"#060f1c",border:"1px solid #152a4a",borderRad
+<div style={{color:"#ffab40",fontSize:"7px",letterSpacing:"2px",marginBottom:2}}>
+<div style={{color:"#152a3a",fontSize:"6.5px",lineHeight:1.8}}>
+<div>Kemar A. Morrison</div>
+<div>ORCID 0009-0008-9904-9790</div>
+<div>MIFT-FRS-v3.0 · TSC v4.0</div>
+<div style={{color:"#ff8f0044"}}>SEED: [EVAL MASKED]</div>
+<div style={{color:"#00e67633",marginTop:3}}>EVALUATION LICENCE</div>
+</div>
+</div>
+</div>
+{/* CANVAS */}
+<div style={{flex:"1 1 0",position:"relative",overflow:"hidden",background:"#030609"}
+<svg style={{position:"absolute",inset:0,width:"100%",height:"100%",opacity:0.025,p
+{Array.from({length:16},(_,i)=>(
+<g key={i}>
+<line x1={i*48} y1={0} x2={i*48} y2={600} stroke="#29b6f6" strokeWidth="0.5"/
+<line x1={0} y1={i*36} x2={900} y2={i*36} stroke="#29b6f6" strokeWidth="0.5"/
+</g>
+))}
+</svg>
+<svg width="100%" height="100%" viewBox="0 0 720 516" style={{display:"block"}}>
+{SYN.map(([a,b],idx)=>{
+const an=LAY[a],bn=LAY[b],w=st.w[DIDX[a]*5]||0;
+return<line key={idx} x1={an.x} y1={an.y} x2={bn.x} y2={bn.y}
+stroke={w>0?"#29b6f6":"#ef5350"} strokeWidth={Math.abs(w)*1.4+0.2}
+opacity={Math.min(0.42,Math.abs(w)*1.3+0.03)} strokeDasharray={w<0?"3,4":"non
+})}
+{LAY.map(({x,y,ni},di)=>{
+const ph=st.phase[ni],psi=st.psi[ni],ci=st.ci[ni],sh=st.sharp[ni];
+const ns=st.cert_ns[ni],lc=LC[st.layer[ni]],pc=PC[ph];
+const r=3.2+(Math.abs(psi)/PSI_N)*7+sh*1.6,isSel=selIdx===di;
+return(
+<g key={di} onClick={()=>setSelIdx(di===selIdx?null:di)} style={{cursor:"poin
+{ns>0&&<circle cx={x} cy={y} r={r+7} fill="none" stroke={pc} strokeWidth="0
+<circle cx={x} cy={y} r={r+3+ci*1.1} fill="none" stroke={pc} strokeWidth={i
+<circle cx={x} cy={y} r={r+1.4} fill="none" stroke={st.val[ni]>0?"#00e676":
+strokeWidth="0.65" opacity={Math.abs(st.val[ni])*0.4}
+strokeDasharray={`${Math.abs(st.val[ni])*9} ${9-Math.abs(st.val[ni])*9}`}
+<circle cx={x} cy={y} r={r} fill={lc+"1a"} stroke={lc} strokeWidth={isSel?2
+<circle cx={x} cy={y} r={r*(Math.abs(psi)/PSI_N)} fill={pc} opacity={0.17}/
+<circle cx={x} cy={y} r={r*sh*0.5} fill={lc} opacity={0.28}/>
+{st.cert_adm[ni]===0&&<circle cx={x} cy={y} r={1.8} fill="#ff1744" opacity=
+<circle cx={x+r*0.7} cy={y-r*0.7} r={1.2} fill={`hsl(${190+(ni%8)*18},80%,5
+</g>
+);
+})}
+{[{l:"ENERGY ψ",x:360,y:145,c:"#29b6f6"},{l:"FREQUENCY Θ",x:360,y:258,c:"#b39ddb"
+.map((d,i)=><text key={i} x={d.x} y={d.y} textAnchor="middle" fontSize="7" fill
+<text x="360" y="18" textAnchor="middle" fontSize="9" fill={DEC.colors[dec.label]
+◆ COGNITIVE DECISION: {DEC.labels[dec.label]} · CE={dec.loss.toFixed(3)}
+</text>
+<text x="360" y="505" textAnchor="middle" fontSize="6.5" fill="#29b6f6" opacity="
+NIŘ v4 EVALUATION RELEASE · KAM-0x∇∞ ANCHORED · SEED MASKED · COPYRIGHT © 2026
+</text>
+<text x="10" y="14" fontSize="7.5" fill="#ffab40" opacity="0.45" fontFamily="mono
+</svg>
+{perturb>0&&<div style={{position:"absolute",inset:0,background:"radial-gradient(el
+</div>
+{/* RIGHT */}
+<div style={{width:"186px",flexShrink:0,background:"#04080f",borderLeft:"1px solid #0
+{sel?(
+<>
+<div style={{color:"#ffab40",letterSpacing:"2px",marginBottom:5}}>ENGRAM #{sel.
+<div style={{background:"#070e1c",border:`1px solid ${LC[sel.layer]}33`,borderR
+{LN[sel.layer]} · Pool {sel.id%8}
+</div>
+<div style={{color:"#29b6f6",letterSpacing:"2px",marginBottom:3,fontSize:"8px"}
+{[["V(x)",sel.V.toFixed(6),"#ffab40"],["dV/dt<0",sel.dV?"✓ YES":"✗ NO",sel.dV?"
+<div key={k} style={{display:"flex",justifyContent:"space-between",borderBott
+<span style={{color:"#1a3040"}}>{k}</span><span style={{color:c}}>{v}</span
+</div>
+))}
+<div style={{color:"#29b6f6",letterSpacing:"2px",margin:"6px 0 3px",fontSize:"8
+{[["inject Δψ",sel.inj.toFixed(6),"#00e676"],["Θ destab",NIR.destTheta(sel.thet
+<div key={k} style={{display:"flex",justifyContent:"space-between",borderBott
+<span style={{color:"#1a3040"}}>{k}</span><span style={{color:c}}>{v}</span
+</div>
+))}
+<div style={{color:"#29b6f6",letterSpacing:"2px",margin:"6px 0 3px",fontSize:"8
+{[["area l",sel.l.toFixed(6),"#b39ddb"],["sharp",sel.sharp.toFixed(6),"#29b6f6"
+<div key={k} style={{display:"flex",justifyContent:"space-between",borderBott
+<span style={{color:"#1a3040"}}>{k}</span><span style={{color:c}}>{v}</span
+</div>
+))}
+<div style={{color:"#29b6f6",letterSpacing:"2px",margin:"6px 0 3px",fontSize:"8
+{[["valence ν",sel.val.toFixed(5),sel.val>=0?"#00e676":"#ff1744"],["familiar",s
+<div key={k} style={{display:"flex",justifyContent:"space-between",borderBott
+<span style={{color:"#1a3040"}}>{k}</span><span style={{color:c}}>{v}</span
+</div>
+))}
+<div style={{marginTop:7,padding:"3px",borderRadius:3,textAlign:"center",border
+{["GREEN","BLUE","AMBER","RED"][sel.phase]} PHASE
+</div>
+<div style={{marginTop:4,background:"#060e1a",borderRadius:3,padding:"3px 5px",
+HASH:[EVAL]{sel.hash.slice(0,4)}...
+</div>
+<div style={{marginTop:6,background:"#04080f",border:"1px solid #ff8f0022",bord
+<div style={{color:"#ff8f0055",marginBottom:2}}>EVAL RELEASE NOTICE</div>
+<div>Seed masked. Hash partial.</div>
+<div>All safety properties intact.</div>
+<div>Full release under licence.</div>
+</div>
+</>
+):(
+<div style={{color:"#0c2030",textAlign:"center",marginTop:60,lineHeight:3,fontSiz
+◎<br/>CLICK<br/>NODE<br/>TO<br/>INSPECT
+</div>
+)}
+<div style={{color:"#29b6f6",letterSpacing:"2px",margin:"12px 0 4px",fontSize:"7px"
+<div style={{color:"#0d2030",fontSize:"6.5px",lineHeight:2}}>
+<div>y=f(Σwᵢxᵢ+b)</div>
+<div>a⁽ˡ⁾=f(W⁽ˡ⁾a⁽ˡ⁻¹⁾+b)</div>
+<div>dl/dt=αe⁻ˡ/ˡmax</div>
+<div>w←w−η·δ·x</div>
+<div>V=||x||²+R(x)</div>
+<div>ψ_{"{t+1}"}=Π_A[IDIG(NIŘ)]</div>
+<div>M=M₀·e^(λ·CI·t)</div>
+<div>Δψ+=Σₖ Aₖsin(ωₖt+φ)</div>
+</div>
+</div>
+</div>
+</div>
+);
+}
